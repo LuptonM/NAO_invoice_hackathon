@@ -99,23 +99,28 @@ def clean_and_save_img(file_path, file_name, directory):
   
   cv2.imwrite(directory + file_name, threshold_img ) 
 
-makes_all_files_jpgs(invoice_folder, images_folder)
-all_imgs =  [x for x in os.listdir(images_folder)  if x.endswith(".jpg")]
+#makes_all_files_jpgs(invoice_folder, images_folder)
+#all_imgs =  [x for x in os.listdir(images_folder)  if x.endswith(".jpg")]
 
 #rotate raw imgs
-[rotate_and_overwrite_img(images_folder + x) for x in all_imgs ]
+#[rotate_and_overwrite_img(images_folder + x) for x in all_imgs ]
 
 #saved cleaned images into cleaned image folder
-clean_and_save_img(images_folder + x, x, cleaned_images_folder) for x in all_imgs ]
+#clean_and_save_img(images_folder + x, x, cleaned_images_folder) for x in all_imgs ]
 
 cleaned_imgs = [x for x in os.listdir(cleaned_images_folder) if x.endswith(".jpg")]
 
-boxes_df = image_to_dataframe(cleaned_images_folder + cleaned_imgs[0])
+boxes_df = image_to_dataframe(cleaned_images_folder + cleaned_imgs[1])
 
 sentance_dict = make_sentances ( list(boxes_df['text']),list(boxes_df['left']) , list(boxes_df['top']),  list(boxes_df['width'] )) 
    
    
 joined_text = sentance_dict['joined_text']
+joined_left = sentance_dict['joined_left']
+joined_top = sentance_dict['joined_top']
+joined_width = sentance_dict['joined_width']
 
+boxes = pd.DataFrame(list(zip(joined_text, joined_left,joined_top , joined_width )),
+               columns =['text', 'left', 'top', 'width'])
 
-print(joined_text)
+print(boxes)
