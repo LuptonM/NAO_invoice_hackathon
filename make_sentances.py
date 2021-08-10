@@ -36,10 +36,19 @@ def make_sentances (text,  left ,  top, width):
 
    for i in range(len(text)):
      
+
      if(is_already_joined[i] == False):
      
        new_text = text[i]
        new_width = width[i]
+
+       if i == len(text) - 1:
+
+            joined_text.append(new_text)
+            joined_left.append(left[i])
+            joined_top.append(top[i])
+            joined_width.append( new_width)
+
 
        for j in range(1,len(text)-i):
            

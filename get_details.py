@@ -25,8 +25,8 @@ def get_details(file_path, get_inverted = False, get_rotated = False, rotation_a
     Invoice_Number_Index = [(idx, text) for idx, text in enumerate(joined_text) if is_invoice_number(text)]
 
     Amount_Index = [(idx, text) for idx, text in enumerate(joined_text) if is_total(text)]
-    
-
+  
+ 
     if len(Invoice_Number_Index) > 0:
          Invoice_Number_Index =  Invoice_Number_Index[0][0]
          Invoice_Number = get_value(joined_text,  left, top, Invoice_Number_Index, 200, 200, row, row_part, string_validator = is_alphanumeric_with_no_spaces)
@@ -46,7 +46,7 @@ def get_details(file_path, get_inverted = False, get_rotated = False, rotation_a
         
          Amount_Index  =  Amount_Index[0][0]
         
-         Amount = get_value(joined_text,  left, top, 20, 200, 200, row, row_part, string_validator = is_numeric)
+         Amount = get_value(joined_text,  left, top, Amount_Index, 800, 400, row, row_part, string_validator = is_numeric)
     else:
         Amount = ''       
   
@@ -56,9 +56,6 @@ def get_details(file_path, get_inverted = False, get_rotated = False, rotation_a
 def get_invoice_details(file_path):
 
    details = get_details(file_path, False, False)
-   print(details)
-
-     # if we failed to read some bits in try rotating  the image or inversing it
    if details['Amount'] =='' or details['Date_Invoiced'] == '' or details['Invoice_Number'] == '' :
 
       details_inverted = get_details(file_path, True)
@@ -109,8 +106,8 @@ def get_invoice_details(file_path):
 
 
 
-            
+         
    details['file_path'] = file_path.split('/')[-1]
-   print(details)
+   print(details)                                    
    return details    
 

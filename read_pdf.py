@@ -27,6 +27,6 @@ details = []
 #[details.append(get_invoice_details(cleaned_images_folder + x)) for x in os.listdir(cleaned_images_folder) if x.endswith(".jpg")]
 
 #get_invoice_details(images_folder+ input_imgs[0])
-get_invoice_details(cleaned_images_folder+ cleaned_imgs[1])
+get_invoice_details(cleaned_images_folder+ cleaned_imgs[15])
 
 #dict_to_csv(details, output_folder + 'results.csv')

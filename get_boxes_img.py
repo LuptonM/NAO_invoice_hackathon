@@ -6,25 +6,33 @@ from string_validation import  is_total , is_numeric , is_invoice_date, is_invoi
 from get_value import get_value
 import cv2
 import imutils
+from custom_sort import custom_sort
 
 def get_boxes_dataframe(img):
    boxes_df = image_to_dataframe(img)
-
- 
+    
+   #boxes_df = boxes_df[boxes_df['conf'] > 50]
    
-      
+   
+ 
    sentance_dict = make_sentances ( list(boxes_df['text']),list(boxes_df['left']) , list(boxes_df['top']),  list(boxes_df['width'] ))      
     
-   joined_text = sentance_dict['joined_text'] 
-
+   
   
+   joined_text = sentance_dict['joined_text']
 
    left = sentance_dict['joined_left'] 
    top = sentance_dict['joined_top'] 
 
    boxes_df = pd.DataFrame(list(zip(joined_text, left, top )),     
                columns =['text', 'left', 'top',])
-   boxes_df = boxes_df.sort_values(by = ['top', 'left']).reset_index(drop=True) 
+   print(boxes_df)  
+   print()
+   print()          
+   boxes_df = custom_sort (joined_text, top, left)            
+   print(boxes_df)
+          
+   #boxes_df = boxes_df.sort_values(by = ['top', 'left']).reset_index(drop=True) 
 
     
    row_dict = get_rows(boxes_df['top'].tolist())
@@ -35,7 +43,7 @@ def get_boxes_dataframe(img):
    boxes_df['row'] = row
    boxes_df['row_part'] = row_part 
    
-   print(boxes_df)
+  
    return boxes_df            
 
 
