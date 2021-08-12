@@ -6,10 +6,17 @@ def is_total(string):
    if string == 'total' or ('total' in string and ('amount' in string or 'invoice' in string ) ):
       return True
 
+def is_VAT(string):
+
+   if 'vat' in string.lower():
+      
+      return True
+   else:
+      False    
 
 def is_alphanumeric_with_no_spaces(string):
 
-   regex = re.match('^[a-zA-Z0-9]*$', string)
+   regex = re.match('^[a-zA-Z0-9\-]*$', string)
    if regex is not None:
       matches = regex.group(0)
    else:

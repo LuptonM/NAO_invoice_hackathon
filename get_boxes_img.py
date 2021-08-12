@@ -7,8 +7,10 @@ from get_value import get_value
 import cv2
 import imutils
 from custom_sort import custom_sort
+from clean_images import read_clean_and_rotate_img
 
 def get_boxes_dataframe(img):
+ 
    boxes_df = image_to_dataframe(img)
     
    #boxes_df = boxes_df[boxes_df['conf'] > 50]
@@ -24,16 +26,9 @@ def get_boxes_dataframe(img):
    left = sentance_dict['joined_left'] 
    top = sentance_dict['joined_top'] 
 
-   boxes_df = pd.DataFrame(list(zip(joined_text, left, top )),     
-               columns =['text', 'left', 'top',])
-   print(boxes_df)  
-   print()
-   print()          
+            
    boxes_df = custom_sort (joined_text, top, left)            
-   print(boxes_df)
-          
-   #boxes_df = boxes_df.sort_values(by = ['top', 'left']).reset_index(drop=True) 
-
+   
     
    row_dict = get_rows(boxes_df['top'].tolist())
 
@@ -61,5 +56,5 @@ def get_boxes(file_path, get_inverted = False, get_rotated = False, rotation_ang
     if get_rotated:  
       rotated_img = imutils.rotate_bound(img, rotation_angle)
       boxes_df = get_boxes_dataframe(rotated_img)
-
+   
     return boxes_df

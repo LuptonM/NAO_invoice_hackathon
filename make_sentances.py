@@ -52,7 +52,7 @@ def make_sentances (text,  left ,  top, width):
 
        for j in range(1,len(text)-i):
            
-           if(is_part_of_sentance (text[i] , left[i] , new_width , top[i], left[i+j] , top[i+j], 15  )   ):
+           if(is_part_of_sentance (text[i] , left[i] , new_width , top[i], left[i+j] , top[i+j], 20  )   ):
                is_already_joined[i+j] = True
                new_text = new_text + ' ' +  text[i+j]
                new_width = width[i+j] + left[i+j] - left[i]

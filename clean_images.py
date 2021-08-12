@@ -89,6 +89,15 @@ def clean_and_save_img(file_path, file_name, directory):
   
   cv2.imwrite(directory + file_name, threshold_img ) 
 
+def read_clean_and_rotate_img(file_path):
+  img = cv2.imread(file_path)     
+  threshold_img  = binarise_image(img)
+  angle = angle_to_rotate(threshold_img)
+  rotated_img = imutils.rotate_bound(threshold_img, angle)
+  
+  return rotated_img
+
+
 
 def prepare_files(invoice_folder, images_folder, cleaned_images_folder):
     makes_all_files_jpgs(invoice_folder, images_folder, cleaned_images_folder)

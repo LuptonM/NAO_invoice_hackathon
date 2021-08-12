@@ -11,7 +11,7 @@ def within_tolerance(top1, top2, tolerance):
 
 
 
-def get_rows(top, tolerance = 10):
+def get_rows(top, tolerance = 20):
     # initialise empty list/vector
     row = [1] * len(top)
     row_part = [1] * len(top)

@@ -25,14 +25,16 @@ def is_above(top1, top2, tolerance):
 
 def custom_sort(text, top, left ):
         
+    
     for i in range(1, len(text)):
   
         current_top = top[i]
         current_left = left[i]
         current_text = text[i]
-    
+
         j = i-1
-        while j >=0 and current_top < top[j] :
+        while j >=0  and current_top < top[j]:
+                
                 text[j+1] = text[j]
                 left[j+1] = left[j]
                 top[j+1] = top[j]
@@ -46,15 +48,10 @@ def custom_sort(text, top, left ):
         current_top = top[i]
         current_left = left[i]
         current_text = text[i]
-    
+
         j = i-1
-        if text[i] == 'cream Ltd':
-           print(not is_above(top[j], top[i], 30) and left[j]>left[i])
-        while j >=0 and not is_above(top[j], top[i], 30) and left[j]>left[i]:
-                if text[i] == 'cream Ltd':
-                    print(text[j])
-                    print(j)
-                    print(i)
+        while j >=0  and within_vert_tolerance(current_top, top[j], 30) and current_left < left[j]:
+                
                 text[j+1] = text[j]
                 left[j+1] = left[j]
                 top[j+1] = top[j]
@@ -62,8 +59,13 @@ def custom_sort(text, top, left ):
         left[j+1] = current_left
         top[j+1] = current_top
         text[j+1] = current_text
+      
 
-          
+    
+       
     boxes_df = pd.DataFrame(list(zip(text, left, top )),     
                columns =['text', 'left', 'top',])
+
+
+               
     return boxes_df
