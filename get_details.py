@@ -10,9 +10,11 @@ import imutils
 from get_boxes_img import get_boxes
 
 
-def get_details(file_path,supplier, get_inverted = False, get_rotated = False, rotation_angle = 90):
+def get_details(boxes_df,supplier):
     
-    boxes_df = get_boxes(file_path, get_inverted, get_rotated, rotation_angle)
+  
+  
+   
     
     joined_text = boxes_df['text']
     left = boxes_df['left']
@@ -33,7 +35,7 @@ def get_details(file_path,supplier, get_inverted = False, get_rotated = False, r
 
     if supplier:
 
-       Supplier_Index = [ text for  text in joined_text if supplier in text]
+       Supplier_Index = [ text for  text in joined_text if supplier.strip().lower() in text.strip().lower()]
 
        if len(Supplier_Index)>0:
           supplier_match = True
@@ -74,13 +76,37 @@ def get_details(file_path,supplier, get_inverted = False, get_rotated = False, r
     return {'Amount': Amount, 'Date_Invoiced': Date_Invoiced , 'Invoice_Number' : Invoice_Number , 'VAT': VAT , 'Supplier_Match' :  supplier_match}      
 
 
+def if_value_empty_try_and_replace(details, details_inverted,details_rotated_plus_90, details_rotated_minus_90 , key):
+
+       if details[key] == '' and details_inverted[key] != '':
+         
+         details.update({key: details_inverted[key]}) 
+
+       if details[key] == '' and details_rotated_plus_90[key] != '':
+         
+         details.update({key: details_rotated_plus_90[key]})  
+     
+       if details[key] == '' and details_rotated_minus_90[key] != '':
+         
+         details.update({key: details_rotated_minus_90[key]})    
+
+       return details    
+
+
+
+
+
 def get_invoice_details(file_path, supplier_dict):
 
    file_name = file_path.split('/')[-1]
+
+
    
    if file_name.endswith('.jpg'):
 
-      file_name = file_name.split('.pdf')[0]
+      file_name = file_name.split('.jpg')[0]
+
+    
 
    if file_name.endswith('.pdf'):
 
@@ -92,69 +118,24 @@ def get_invoice_details(file_path, supplier_dict):
    else:
       supplier = ''     
 
-   details = get_details(file_path,supplier, False, False)
+   boxes_df = get_boxes(file_path)
+   details = get_details(boxes_df,supplier)
  
    if details['Amount'] =='' or details['Date_Invoiced'] == '' or details['Invoice_Number'] == '' :
-
-      details_inverted = get_details(file_path, supplier, True)
-      details_rotated_plus_90 = get_details(file_path, supplier, False, True, 90)
-      details_rotated_minus_90 = get_details(file_path, supplier, False, True, -90)
+      boxes_df = get_boxes(file_path, True)
+      details_inverted = get_details(boxes_df, supplier)
+      boxes_df = get_boxes(file_path, False, True, 90)
+      details_rotated_plus_90 = get_details(boxes_df, supplier)
+      boxes_df = get_boxes(file_path, False, True, -90)
+      details_rotated_minus_90 = get_details(boxes_df, supplier)
      
-      if details['Amount'] == '' and details_inverted['Amount'] != '':
-         
-        details.update({'Amount': details_inverted['Amount']}) 
+      details = if_value_empty_try_and_replace(details, details_inverted,details_rotated_plus_90, details_rotated_minus_90 , 'Amount')   
 
-      if details['Amount'] == '' and details_rotated_plus_90['Amount'] != '':
-         
-        details.update({'Amount': details_rotated_plus_90['Amount']})  
-     
-      if details['Amount'] == '' and details_rotated_minus_90['Amount'] != '':
-         
-        details.update({'Amount': details_rotated_minus_90['Amount']})        
+      details = if_value_empty_try_and_replace(details, details_inverted,details_rotated_plus_90, details_rotated_minus_90 , 'Date_Invoiced')  
 
+      details = if_value_empty_try_and_replace(details, details_inverted,details_rotated_plus_90, details_rotated_minus_90 , 'Invoice_Number')  
 
-                       
-         
-      if details['Date_Invoiced'] == '' and details_inverted['Date_Invoiced'] != '':
-
-         details.update({'Date_Invoiced': details_inverted['Date_Invoiced']}) 
-         
-      if details['Date_Invoiced'] == '' and details_rotated_plus_90['Date_Invoiced'] != '':
-
-         details.update({'Date_Invoiced': details_rotated_plus_90['Date_Invoiced']})       
-
-      if details['Date_Invoiced'] == '' and details_rotated_minus_90['Date_Invoiced'] != '':
-
-         details.update({'Date_Invoiced': details_rotated_minus_90['Date_Invoiced']}) 
-
-
-
-
-      if details['Invoice_Number'] == '' and details_inverted['Invoice_Number'] != '':
-
-         details.update({'Invoice_Number': details_inverted['Invoice_Number']})    
-
-      if details['Invoice_Number'] == '' and details_rotated_plus_90['Invoice_Number'] != '':
-
-         details.update({'Invoice_Number': details_rotated_plus_90['Invoice_Number']})  
-         
-      if details['Invoice_Number'] == '' and details_rotated_minus_90['Invoice_Number'] != '':
-
-         details.update({'Invoice_Number': details_rotated_minus_90['Invoice_Number']}) 
-         
-
-
-      if details['VAT'] == '' and details_inverted['VAT'] != '':
-
-         details.update({'VAT': details_inverted['VAT']})    
-
-      if details['VAT'] == '' and details_rotated_plus_90['VAT'] != '':
-
-         details.update({'VAT': details_rotated_plus_90['VAT']})  
-         
-      if details['VAT'] == '' and details_rotated_minus_90['VAT'] != '':
-
-         details.update({'VAT': details_rotated_minus_90['VAT']})     
+      details = if_value_empty_try_and_replace(details, details_inverted,details_rotated_plus_90, details_rotated_minus_90 , 'VAT') 
 
 
 
@@ -163,3 +144,6 @@ def get_invoice_details(file_path, supplier_dict):
    print(details)                                    
    return details    
 
+
+
+    
